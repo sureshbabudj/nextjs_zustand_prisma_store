@@ -1,0 +1,41 @@
+// schema.prisma
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+// schema.prisma
+
+model Category {
+  id           String       @id @default(uuid()) 
+  name         String
+  subcategories Subcategory[]
+  products      Product[]   // Add the opposite relation field for products
+}
+
+model Subcategory {
+  id            String      @id @default(uuid())
+  name          String
+  categoryId    String
+  category      Category    @relation(fields: [categoryId], references: [id])
+  products      Product[]
+}
+
+model Product {
+  id            String       @id @default(uuid())
+  name          String
+  price         Float
+  weight        Float
+  brand         String
+  color         String
+  isNew         Boolean
+  categoryId    String
+  subcategoryId String
+  category      Category    @relation(fields: [categoryId], references: [id])
+  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+}
+
