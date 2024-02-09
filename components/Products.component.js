@@ -17,7 +17,11 @@ export default function Product() {
         <div key={i / 3} className="row">
           {products.slice(i, i + 3).map((product, index) => (
             <div key={index} className="col">
-              <Card key={product.id} className="mb-3">
+              <Card
+                key={product.id}
+                className="mb-3"
+                style={{ backgroundColor: product.color }}
+              >
                 <Card.Body>
                   <Card.Title>{product.name}</Card.Title>
                   <Card.Text>Price: {product.price}</Card.Text>
