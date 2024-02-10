@@ -3,41 +3,18 @@ import Categories from "./Categories.component";
 import Product from "./Products.component";
 import styles from "../styles/Home.module.css";
 import { useStore } from "../store";
-import { getProductsData } from "../pages";
 
 import { updateQueryParams } from "../utils/updateQueryParams";
 import { useRouter } from "next/router";
+import { getProductsData } from "../pages";
 
 export default function Main() {
   const router = useRouter();
-  const {
-    size,
-    page,
-    selectedCategories,
-    selectedSubcategories,
-    setProductsData,
-    setSelectedCategories,
-    setSelectedSubcategories,
-    setPage,
-    setSize,
-  } = useStore();
-
-  const fetchProducts = async () => {
-    try {
-      const productsData = await getProductsData({
-        size,
-        page,
-        selectedCategories,
-        selectedSubcategories,
-      });
-      setProductsData(productsData);
-    } catch (error) {
-      setProductsData({ products: [], totalCount: 0 });
-    }
-  };
+  const state = useStore();
 
   useEffect(() => {
     const handlePopstate = () => {
+      console.log("handlePopstate");
       const query = window.location.search.substring(1);
       const params = new URLSearchParams(query);
       const newQueryParams = {};
@@ -45,11 +22,30 @@ export default function Main() {
         newQueryParams[key] = value;
       }
       const { categories, subcategories, page, size } = newQueryParams;
-      // Update store state with query parameters from URL
-      setSelectedCategories(categories ? categories.split(",") : []);
-      setSelectedSubcategories(subcategories ? subcategories.split(",") : []);
-      setPage(page ? parseInt(page, 10) : 1);
-      setSize(size ? parseInt(size, 10) : 10);
+
+      const updatedQueryState = {
+        selectedCategories: categories ? categories.split(",") : [],
+        selectedSubcategories: subcategories ? subcategories.split(",") : [],
+        page: page ? parseInt(page, 10) : 1,
+        size: size ? parseInt(size, 10) : 10,
+      };
+
+      useStore.setState({
+        ...state,
+        ...updatedQueryState,
+      });
+
+      const fetchProducts = async () => {
+        try {
+          const productsData = await getProductsData(updatedQueryState);
+          return productsData;
+        } catch (error) {
+          console.log("Error while fetching products data", error);
+          return null;
+        }
+      };
+
+      fetchProducts();
     };
 
     window.addEventListener("popstate", handlePopstate);
@@ -60,10 +56,10 @@ export default function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.query]);
 
+  const { size, page, selectedCategories, selectedSubcategories } = state;
+
   useEffect(() => {
     updateQueryParams(router);
-    fetchProducts();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [size, page, selectedCategories, selectedSubcategories]);
 

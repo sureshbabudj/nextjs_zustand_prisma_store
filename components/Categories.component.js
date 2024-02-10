@@ -11,7 +11,6 @@ function Categories() {
     selectedSubcategories,
     setSelectedCategories,
     setSelectedSubcategories,
-    setPage,
   } = useStore();
 
   // Event handler for category selection change
@@ -26,7 +25,6 @@ function Categories() {
         temp.splice(indexToRemove, 1);
       }
     }
-    setPage(1);
     setSelectedCategories(temp);
   };
 
@@ -44,7 +42,6 @@ function Categories() {
         temp.splice(indexToRemove, 1);
       }
     }
-    setPage(1);
     setSelectedSubcategories(temp);
   };
 

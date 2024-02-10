@@ -6,10 +6,10 @@ import { useEffect } from "react";
 import { useStore } from "../store";
 
 export async function getProductsData({
-  size,
-  page,
-  selectedCategories,
-  selectedSubcategories,
+  size = 10,
+  page = 1,
+  selectedCategories = [],
+  selectedSubcategories = [],
 }) {
   try {
     let url = `http://localhost:3001/api/products?size=${size}&page=${page}`;
@@ -43,7 +43,6 @@ export async function getServerSideProps(context) {
       : [],
     page: queryParams.page ? parseInt(queryParams.page, 10) : 1,
     size: queryParams.size ? parseInt(queryParams.size, 10) : 10,
-    queryParams,
     productsData: {
       products: [],
       totalCount: 0,
@@ -77,50 +76,10 @@ export async function getServerSideProps(context) {
 }
 
 export default function Home({ initialData }) {
-  const {
-    setQueryParams,
-    setSelectedCategories,
-    setSelectedSubcategories,
-    setPage,
-    setSize,
-    setProductsData,
-    setCategories,
-  } = useStore((state) => state);
-
-  const {
-    queryParams,
-    selectedCategories,
-    selectedSubcategories,
-    page,
-    size,
-    productsData,
-    categories,
-  } = initialData;
-
   useEffect(() => {
-    setQueryParams(queryParams);
-    setSelectedCategories(selectedCategories);
-    setSelectedSubcategories(selectedSubcategories);
-    setPage(page);
-    setSize(size);
-    setProductsData(productsData);
-    setCategories(categories);
-  }, [
-    categories,
-    page,
-    productsData,
-    queryParams,
-    selectedCategories,
-    selectedSubcategories,
-    setCategories,
-    setPage,
-    setProductsData,
-    setQueryParams,
-    setSelectedCategories,
-    setSelectedSubcategories,
-    setSize,
-    size,
-  ]);
+    useStore.setState(initialData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className={styles.container}>
