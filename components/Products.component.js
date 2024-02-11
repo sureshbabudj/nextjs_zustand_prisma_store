@@ -1,6 +1,6 @@
 // Product.js
 import React from "react";
-import { Card } from "react-bootstrap";
+import { Card, CardImg } from "react-bootstrap";
 import CustomPagination from "./Pagination.component";
 import { useStore } from "../store";
 
@@ -16,12 +16,9 @@ export default function Product() {
       const row = (
         <div key={i / 3} className="row">
           {products.slice(i, i + 3).map((product, index) => (
-            <div key={index} className="col">
-              <Card
-                key={product.id}
-                className="mb-3"
-                style={{ backgroundColor: product.color }}
-              >
+            <div key={index} className="col d-flex align-items-stretch w-33">
+              <Card key={product.id} className="mb-3 product-card">
+                <CardImg src={product.image} />
                 <Card.Body>
                   <Card.Title>{product.name}</Card.Title>
                   <Card.Text>Price: {product.price}</Card.Text>

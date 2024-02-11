@@ -11,11 +11,8 @@ const handler = routes.getRequestHandler(app);
 
 app.prepare().then(() => {
   const application = express();
-  debugger;
   application
     .use(cors())
     .use(handler)
-    .listen(3001, () => {
-      debugger;
-    });
+    .listen(3001, () => {});
 });

@@ -26,16 +26,21 @@ model Subcategory {
 }
 
 model Product {
-  id            String       @id @default(uuid())
-  name          String
-  price         Float
-  weight        Float
-  brand         String
-  color         String
-  isNew         Boolean
-  categoryId    String
-  subcategoryId String
-  category      Category    @relation(fields: [categoryId], references: [id])
-  subcategory   Subcategory @relation(fields: [subcategoryId], references: [id])
+  id              String       @id @default(uuid())
+  name            String
+  price           Float
+  weight          Float
+  brand           String
+  color           String
+  isNew           Boolean
+  image           String       
+  description     String?      
+  stockQuantity   Int?         
+  rating          Float?       
+  manufacturer    String?      
+  categoryId      String
+  subcategoryId   String
+  category        Category     @relation(fields: [categoryId], references: [id])
+  subcategory     Subcategory  @relation(fields: [subcategoryId], references: [id])
 }
 
